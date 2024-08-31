@@ -1,0 +1,20 @@
+.inputField {
+  margin-left: 1%;
+  width: 88%;
+  border: none;
+  outline: none;
+}
+.nameField {
+  margin: auto;
+  margin-left: 30px;
+  font-weight: 600;
+}
+.downarrow_icon {
+  margin-right: 3%;
+  margin-top: 35px;
+}
+.profile_img {
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid gray;
+}
