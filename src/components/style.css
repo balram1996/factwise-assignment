@@ -16,5 +16,15 @@
 .profile_img {
   object-fit: cover;
   border-radius: 50%;
-  border: 1px solid gray;
+  border: 1px solid #c7c5c5;
+}
+.description_TextField {
+  overflow: visible;
+  width: 100%;
+}
+.age_TextField,
+.gender_TextField,
+.country_TextField,
+.description_TextField :focus {
+  outline: none;
 }

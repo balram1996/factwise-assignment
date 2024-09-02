@@ -3,20 +3,31 @@ import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
 import "./style.css";
 import Card from "./Card";
-import { useAppDispatch, useAppSelector } from "../index";
-import { useSelector } from "react-redux";
+import axios from "axios";
+import { apicall } from "../store/reducers/callApi";
+import { useAppDispatch } from "../store/hooks";
 
 const Home = () => {
-  const [mapData, setMapData] = useState([]);
   const dispatch = useAppDispatch();
-  const allUsers = useSelector((state) => state.celebs.celebsProfile);
+  const [mapData, setMapData] = useState([]);
+  const [compareData, setCompareData] = useState([]);
 
   useEffect(() => {
-    setMapData(allUsers);
-  }, [allUsers]);
+    axios
+      .get("http://localhost:8000/celebrities")
+      .then((response) => {
+        console.log(response.data, "shivani data");
+        setMapData(response.data);
+        setCompareData(response.data);
+        dispatch(apicall(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   function handleSearchQuery(query) {
-    const filteredData = allUsers.filter((singleProfile) =>
+    const filteredData = compareData.filter((singleProfile) =>
       singleProfile.first.toLowerCase().includes(query)
     );
     setMapData(filteredData);
@@ -40,15 +51,14 @@ const Home = () => {
       <Box
         sx={{
           p: 2,
-          border: "1.5px solid black",
-          width: "50%",
+          maxWidth: "500px",
           margin: "auto",
           alignItems: "center",
         }}
       >
         <Box
           sx={{
-            border: "1.5px solid gray",
+            border: "1.5px solid #c7c5c5",
             borderRadius: "10px",
             display: "flex",
             padding: "1px",
@@ -58,13 +68,13 @@ const Home = () => {
             style={{
               marginLeft: "10px",
               padding: "3px",
-              color: "gray",
+              color: "#c7c5c5",
             }}
           />
           <input
             className="inputField"
             placeholder="Search user"
-            onChange={onChangeHandle}
+            onChange={(event) => onChangeHandle(event)}
           ></input>
         </Box>
         <Card celebsProfiles={mapData} />
