@@ -10,8 +10,9 @@ import { useAppDispatch } from "../store/hooks";
 import { updateCelebs } from "../store/reducers/updateCelebs";
 import axios from "axios";
 
-const Card = ({ celebsProfiles }) => {
+const Card = ({ celebsProfiles, isSearching }) => {
   const dispatch = useAppDispatch();
+
   function calculateAge(dob) {
     const today = new Date();
     const birthDate = new Date(dob);
@@ -36,9 +37,9 @@ const Card = ({ celebsProfiles }) => {
   }
 
   const genders = [
-    "Male",
-    "Female",
-    "Transgender",
+    "male",
+    "female",
+    "transgender",
     "Rather not to say",
     "Others",
   ];
@@ -59,11 +60,13 @@ const Card = ({ celebsProfiles }) => {
     event.preventDefault();
     setInitialInputValues((prevValues) => ({
       ...prevValues,
+      first: item.first,
       dob: item.dob,
       gender: item.gender,
       country: item.country,
       description: item.description,
     }));
+    setSelectedOption(item.gender);
     setIsEditable(true);
     setBorderVal("1px solid #c7c5c5");
     setIsDropdown(true);
@@ -81,12 +84,11 @@ const Card = ({ celebsProfiles }) => {
     setExpandedIndex((prevIndex) => (prevIndex === index ? null : index));
   };
   const ChangeCancle = () => {
-    console.log("trigger changeCancle");
     setIsEditable(false);
     setBorderVal("none");
   };
   const ChangeSave = (event, item, id) => {
-    console.log("trigger changeSave", item);
+    let ifChangedVal = false;
     setIsEditable(false);
     setBorderVal("none");
     setIsDropdown(false);
@@ -94,11 +96,13 @@ const Card = ({ celebsProfiles }) => {
     for (let key in initialInputValues) {
       if (initialInputValues[key] !== item[key]) {
         updatedItem[key] = initialInputValues[key];
+        ifChangedVal = true;
       }
     }
-
-    updateCelebrity(id, updatedItem);
-    dispatch(updateCelebs(updatedItem));
+    if (ifChangedVal) {
+      updateCelebrity(id, updatedItem);
+      dispatch(updateCelebs(updatedItem));
+    }
   };
 
   const deleteProfile = (id) => {
@@ -109,9 +113,7 @@ const Card = ({ celebsProfiles }) => {
   const updateCelebrity = (id, updatedData) => {
     axios
       .put(`http://localhost:8000/celebrities/${id}`, updatedData)
-      .then((response) => {
-        console.log(response.data, "Updated data");
-      })
+      .then((response) => {})
       .catch((error) => {
         console.log(error);
       });
@@ -122,6 +124,9 @@ const Card = ({ celebsProfiles }) => {
         ? celebsProfiles.map((item) => {
             // Hide other profiles when one is expanded
             if (expandedIndex !== null && expandedIndex !== item.id) {
+              if (isSearching) {
+                setExpandedIndex(null);
+              }
               return null;
             }
             return (
@@ -143,24 +148,57 @@ const Card = ({ celebsProfiles }) => {
                   >
                     <Box
                       sx={{
-                        width: "20%",
-                        padding: "15px",
+                        width: "50%",
+                        padding: "10px 15px",
                         display: "flex",
+                        justifyContent: "center",
                       }}
                     >
-                      <img className="profile_img" src={item.picture} />
-                      <span
+                      <img
+                        className="profile_img"
+                        src={item.picture}
+                        alt={"profile"}
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto",
+                          flexShrink: "0",
+                        }}
+                      />
+
+                      <input
                         className="nameField"
-                        style={{ fontFamily: "sans-serif", color: "#4f4e4e" }}
-                      >
-                        {item.first}
-                      </span>
+                        style={{
+                          fontFamily: "sans-serif",
+                          color: "#4f4e4e",
+                          borderRadius: "10px",
+                          minWidth: "60px",
+                          border: borderVal,
+                        }}
+                        defaultValue={item.first}
+                        disabled={!isEditable}
+                        onChange={(event) => {
+                          if (event.target.value) {
+                            setInitialInputValues((prevValues) => ({
+                              ...prevValues,
+                              first: event.target.value,
+                            }));
+                          }
+                        }}
+                      />
                     </Box>
-                    <KeyboardArrowDownIcon
-                      className="downarrow_icon"
-                      onClick={() => handleIconClick(item.id)}
-                      style={{ cursor: "pointer", color: "#4f4e4e" }}
-                    />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "0px 15px",
+                      }}
+                    >
+                      <KeyboardArrowDownIcon
+                        className="downarrow_icon"
+                        onClick={() => handleIconClick(item.id)}
+                        style={{ cursor: "pointer", color: "#4f4e4e" }}
+                      />
+                    </Box>
                   </Box>
                   {expandedIndex === item.id && (
                     <Box
@@ -168,6 +206,8 @@ const Card = ({ celebsProfiles }) => {
                         width: "100%",
                         // border: "1px solid #c7c5c5",
                         borderRadius: "10px",
+                        display: "flex",
+                        flexDirection: "column",
                       }}
                       className="detailed_parentDiv"
                     >
@@ -178,34 +218,27 @@ const Card = ({ celebsProfiles }) => {
                           borderRadius: "10px",
                           display: "flex",
                           justifyContent: "space-between",
+                          gap: "10px",
                         }}
                       >
                         <Box
                           sx={{
                             width: "20%",
-                            padding: "10px",
-                            marginLeft: "10px",
+                            padding: "5px 10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "left",
+                            gap: "8px",
                           }}
                         >
-                          <p
-                            style={{
-                              margin: "auto",
-                              marginLeft: "5px",
-                              marginBottom: "5px",
-                              color: "gray",
-                            }}
-                          >
-                            Age
-                          </p>
+                          <div>Age</div>
                           <input
                             className="age_TextField"
                             style={{
-                              width: "100%",
+                              // width: "100%",
+                              border: borderVal,
                               height: "25px",
                               borderRadius: "10px",
-                              border: borderVal,
-                              margin: "auto",
-                              padding: "0 0 0 10px",
                             }}
                             defaultValue={`${calculateAge(item.dob)} Years`}
                             disabled={!isEditable}
@@ -227,24 +260,17 @@ const Card = ({ celebsProfiles }) => {
                         <Box
                           sx={{
                             width: "20%",
-                            margin: "auto",
-                            padding: "10px",
+                            padding: "5px 10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "left",
+                            gap: "8px",
                           }}
                         >
-                          <p
-                            style={{
-                              margin: "auto",
-                              marginLeft: "5px",
-                              marginBottom: "5px",
-                              color: "gray",
-                            }}
-                          >
-                            Gender
-                          </p>
+                          <div>Gender</div>
                           {!isDropdown ? (
                             <input
                               style={{
-                                width: "100%",
                                 border: borderVal,
                                 height: "25px",
                                 borderRadius: "10px",
@@ -264,11 +290,9 @@ const Card = ({ celebsProfiles }) => {
                                 handleInputChange(event);
                               }}
                               style={{
-                                width: "100%",
                                 border: borderVal,
-                                borderRadius: "10px",
                                 height: "25px",
-                                padding: "0 0 0 10px",
+                                borderRadius: "10px",
                               }}
                             >
                               {genders.map((item) => {
@@ -284,29 +308,20 @@ const Card = ({ celebsProfiles }) => {
                         <Box
                           sx={{
                             width: "20%",
-                            margin: "auto",
-                            padding: "10px",
-                            borderRadius: "10px",
+                            padding: "5px 10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "left",
+                            gap: "8px",
                           }}
                         >
-                          <p
-                            style={{
-                              margin: "auto",
-                              marginLeft: "5px",
-                              marginBottom: "5px",
-                              color: "gray",
-                            }}
-                          >
-                            Country
-                          </p>
+                          <div>Country</div>
                           <input
                             className="country_TextField"
                             style={{
-                              width: "100%",
                               border: borderVal,
                               height: "25px",
                               borderRadius: "10px",
-                              padding: "0 0 0 10px",
                             }}
                             defaultValue={`${item.country}`}
                             disabled={!isEditable}
@@ -325,46 +340,51 @@ const Card = ({ celebsProfiles }) => {
                         sx={{
                           width: "100%",
                           borderRadius: "10px",
-                          padding: "10px",
-                          marginLeft: "10px",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "5px",
                         }}
                       >
-                        <p
+                        <div
                           style={{
-                            margin: "auto",
-                            marginLeft: "5px",
-                            marginBottom: "5px",
+                            padding: "10px",
                             color: "gray",
                           }}
                         >
                           Description
-                        </p>
-                        <textarea
-                          className="description_TextField"
-                          defaultValue={`${item.description}`}
-                          disabled={!isEditable}
+                        </div>
+                        <div
                           style={{
-                            border: borderVal,
-                            height: "70px",
-                            overflow: "hidden",
-                            resize: "none",
-                            width: "445px",
-                            marginLeft: "auto",
-                            marginRight: "25px",
-                            borderRadius: "10px",
-                            padding: "7px",
-                            tabindex: "0",
-                            fontFamily: "sans-serif",
+                            display: "flex",
+                            padding: "10px",
+                            color: "gray",
                           }}
-                          onChange={(event) => {
-                            if (event.target.value) {
-                              setInitialInputValues((prevValues) => ({
-                                ...prevValues,
-                                description: event.target.value,
-                              }));
-                            }
-                          }}
-                        ></textarea>
+                        >
+                          <textarea
+                            className="description_TextField"
+                            defaultValue={`${item.description}`}
+                            disabled={!isEditable}
+                            style={{
+                              border: borderVal,
+                              height: "70px",
+                              overflow: "hidden",
+                              resize: "none",
+                              width: "100%",
+                              padding: "10px",
+                              borderRadius: "10px",
+                              tabindex: "0",
+                              fontFamily: "sans-serif",
+                            }}
+                            onChange={(event) => {
+                              if (event.target.value) {
+                                setInitialInputValues((prevValues) => ({
+                                  ...prevValues,
+                                  description: event.target.value,
+                                }));
+                              }
+                            }}
+                          ></textarea>
+                        </div>
                       </Box>
                       <Box
                         style={{

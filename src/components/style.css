@@ -25,18 +25,58 @@
 .age_TextField,
 .gender_TextField,
 .country_TextField,
+.nameField,
 .description_TextField :focus {
   outline: none;
 }
 
-.dialoge-btns {
-  border-radius: 5px !important;
-  border: 1px solid gray !important;
-  color: gray !important;
-  width: 90px !important;
-  height: 30px;
+.dialoge-btns.delete-btn {
+  background-color: #ff5f1a;
+  color: white;
+  border: 1px solid #8c8a8a;
+  border-radius: 5px;
+  padding: 10px 20px;
+  outline: none;
+  transition: background-color 0.3s;
 }
-.dialoge-btns:hover {
-  background-color: #ff5f1a; /* Change color on hover if desired */
-  color: azure !important;
+
+.dialoge-btns.cancel-btn {
+  background-color: white;
+  color: #8a8787;
+  border: 1px solid #8c8a8a;
+  border-radius: 5px;
+  padding: 10px 20px;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+/* When hovering over the delete button, revert the cancel button */
+.dialoge-btns.delete-btn:hover + .cancel-btn {
+  background-color: #ffffff; /* Cancel button stays gray */
+  color: #8a8787;
+}
+
+/* When hovering over the cancel button, revert the delete button */
+.dialoge-btns.cancel-btn:hover ~ .delete-btn {
+  background-color: #fffdfd; /* Change delete button to gray */
+  color: #8a8787;
+  border: "1px solid #8a8787";
+}
+
+/* When hovering over the cancel button, highlight it */
+.dialoge-btns.cancel-btn:hover {
+  background-color: #ff5f1a; /* Highlight the cancel button */
+  color: white;
+}
+
+/* When hovering over the delete button, remove highlight from cancel */
+.dialoge-btns.delete-btn:hover ~ .cancel-btn {
+  background-color: #fffdfd; /* Revert cancel button to gray */
+  color: #8a8787;
+  border: "1.5px solid #8a8787";
+}
+
+/* When hovering over the delete button, keep it highlighted */
+.dialoge-btns.delete-btn:hover {
+  background-color: #ff5f1a; /* Keep delete button red */
 }

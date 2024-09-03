@@ -11,12 +11,11 @@ const Home = () => {
   const dispatch = useAppDispatch();
   const [mapData, setMapData] = useState([]);
   const [compareData, setCompareData] = useState([]);
-
+  const [isSearch, setIsSearch] = useState(false);
   useEffect(() => {
     axios
       .get("http://localhost:8000/celebrities")
       .then((response) => {
-        console.log(response.data, "shivani data");
         setMapData(response.data);
         setCompareData(response.data);
         dispatch(apicall(response.data));
@@ -31,6 +30,7 @@ const Home = () => {
       singleProfile.first.toLowerCase().includes(query)
     );
     setMapData(filteredData);
+    setIsSearch(false);
   }
   function debouce(func, delay) {
     let timer;
@@ -43,6 +43,7 @@ const Home = () => {
   }
   const applyDebounce = debouce(handleSearchQuery, 500);
   const onChangeHandle = (event) => {
+    setIsSearch(true);
     applyDebounce(event.target.value);
   };
 
@@ -77,7 +78,7 @@ const Home = () => {
             onChange={(event) => onChangeHandle(event)}
           ></input>
         </Box>
-        <Card celebsProfiles={mapData} />
+        <Card celebsProfiles={mapData} isSearching={isSearch} />
       </Box>
     </>
   );

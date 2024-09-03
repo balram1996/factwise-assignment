@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./style.css";
-import { Box, Button } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { useSelector } from "react-redux";
 import { deleteCelebs } from "../store/reducers/deleteCelebs";
 import axios from "axios";
-import zIndex from "@mui/material/styles/zIndex";
 
 const DeletePopup = ({ sendDataToParent, deleteKeyy, IssetExpend }) => {
+  const deleteButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (deleteButtonRef.current) {
+      deleteButtonRef.current.focus();
+    }
+  }, []);
+
   const [visible, setVisible] = useState("block");
   const myData = useSelector((state) => state.celebs.celebsProfile);
   const dispatch = useAppDispatch();
@@ -16,7 +22,6 @@ const DeletePopup = ({ sendDataToParent, deleteKeyy, IssetExpend }) => {
     sendDataToParent(false);
   };
   const handleDelete = () => {
-    console.log(myData, "ahivaaaa");
     deleteCelebrityById(deleteKeyy);
     dispatch(deleteCelebs(deleteKeyy));
     setVisible("none");
@@ -41,7 +46,7 @@ const DeletePopup = ({ sendDataToParent, deleteKeyy, IssetExpend }) => {
 
   return (
     <>
-      <Box
+      <div
         style={{
           width: "80%",
           height: "100px",
@@ -52,12 +57,15 @@ const DeletePopup = ({ sendDataToParent, deleteKeyy, IssetExpend }) => {
           display: visible,
           marginTop: "-250px",
           zIndex: 999,
+          position: "relative",
+          backgroundColor: "white",
+          boxShadow: "0px 5px 15px 5px rgb(199, 197, 197)",
         }}
       >
         <p style={{ color: "rgb(56, 56, 56)" }}>
           Are you sure you want to delete?
         </p>
-        <Box
+        <div
           style={{
             display: "flex",
             justifyContent: "space-evenly",
@@ -66,14 +74,23 @@ const DeletePopup = ({ sendDataToParent, deleteKeyy, IssetExpend }) => {
             marginRight: "0",
           }}
         >
-          <button className="dialoge-btns" onClick={handleCancle}>
+          <button
+            // className="dialoge-btns"
+            className="dialoge-btns cancel-btn"
+            onClick={handleCancle}
+            ref={deleteButtonRef}
+          >
             Cancle
           </button>
-          <button className="dialoge-btns" onClick={handleDelete}>
+          <button
+            // className="dialoge-btns"
+            className="dialoge-btns delete-btn"
+            onClick={handleDelete}
+          >
             Delete
           </button>
-        </Box>
-      </Box>
+        </div>
+      </div>
     </>
   );
 };
