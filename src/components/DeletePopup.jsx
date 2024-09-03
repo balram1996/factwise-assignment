@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import "./style.css";
 import { Box, Button } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { useSelector } from "react-redux";
 import { deleteCelebs } from "../store/reducers/deleteCelebs";
 import axios from "axios";
+import zIndex from "@mui/material/styles/zIndex";
 
 const DeletePopup = ({ sendDataToParent, deleteKeyy, IssetExpend }) => {
   const [visible, setVisible] = useState("block");
@@ -43,21 +45,33 @@ const DeletePopup = ({ sendDataToParent, deleteKeyy, IssetExpend }) => {
         style={{
           width: "80%",
           height: "100px",
-          border: "1px solid black",
+          border: "1.5px solid rgb(199, 197, 197)",
           margin: "auto",
           padding: "10px",
           borderRadius: "10px",
           display: visible,
+          marginTop: "-250px",
+          zIndex: 999,
         }}
       >
-        <p>Are you sure you want to delete?</p>
-        <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button className="dialoge_btns" onClick={handleCancle}>
+        <p style={{ color: "rgb(56, 56, 56)" }}>
+          Are you sure you want to delete?
+        </p>
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            width: "200px",
+            margin: "auto",
+            marginRight: "0",
+          }}
+        >
+          <button className="dialoge-btns" onClick={handleCancle}>
             Cancle
-          </Button>
-          <Button className="dialoge_btns" onClick={handleDelete}>
+          </button>
+          <button className="dialoge-btns" onClick={handleDelete}>
             Delete
-          </Button>
+          </button>
         </Box>
       </Box>
     </>

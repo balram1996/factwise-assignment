@@ -16,7 +16,7 @@
 .profile_img {
   object-fit: cover;
   border-radius: 50%;
-  border: 1px solid #c7c5c5;
+  border: 1px solid #8c8a8a;
 }
 .description_TextField {
   overflow: visible;
@@ -27,4 +27,16 @@
 .country_TextField,
 .description_TextField :focus {
   outline: none;
+}
+
+.dialoge-btns {
+  border-radius: 5px !important;
+  border: 1px solid gray !important;
+  color: gray !important;
+  width: 90px !important;
+  height: 30px;
+}
+.dialoge-btns:hover {
+  background-color: #ff5f1a; /* Change color on hover if desired */
+  color: azure !important;
 }

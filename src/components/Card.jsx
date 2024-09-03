@@ -149,12 +149,17 @@ const Card = ({ celebsProfiles }) => {
                       }}
                     >
                       <img className="profile_img" src={item.picture} />
-                      <span className="nameField">{item.first}</span>
+                      <span
+                        className="nameField"
+                        style={{ fontFamily: "sans-serif", color: "#4f4e4e" }}
+                      >
+                        {item.first}
+                      </span>
                     </Box>
                     <KeyboardArrowDownIcon
                       className="downarrow_icon"
                       onClick={() => handleIconClick(item.id)}
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", color: "#4f4e4e" }}
                     />
                   </Box>
                   {expandedIndex === item.id && (
@@ -182,7 +187,16 @@ const Card = ({ celebsProfiles }) => {
                             marginLeft: "10px",
                           }}
                         >
-                          <p style={{ margin: "auto" }}>Age</p>
+                          <p
+                            style={{
+                              margin: "auto",
+                              marginLeft: "5px",
+                              marginBottom: "5px",
+                              color: "gray",
+                            }}
+                          >
+                            Age
+                          </p>
                           <input
                             className="age_TextField"
                             style={{
@@ -191,6 +205,7 @@ const Card = ({ celebsProfiles }) => {
                               borderRadius: "10px",
                               border: borderVal,
                               margin: "auto",
+                              padding: "0 0 0 10px",
                             }}
                             defaultValue={`${calculateAge(item.dob)} Years`}
                             disabled={!isEditable}
@@ -216,7 +231,16 @@ const Card = ({ celebsProfiles }) => {
                             padding: "10px",
                           }}
                         >
-                          <p style={{ margin: "auto" }}>Gender</p>
+                          <p
+                            style={{
+                              margin: "auto",
+                              marginLeft: "5px",
+                              marginBottom: "5px",
+                              color: "gray",
+                            }}
+                          >
+                            Gender
+                          </p>
                           {!isDropdown ? (
                             <input
                               style={{
@@ -239,7 +263,13 @@ const Card = ({ celebsProfiles }) => {
                               onChange={(event) => {
                                 handleInputChange(event);
                               }}
-                              style={{ width: "100%", border: borderVal }}
+                              style={{
+                                width: "100%",
+                                border: borderVal,
+                                borderRadius: "10px",
+                                height: "25px",
+                                padding: "0 0 0 10px",
+                              }}
                             >
                               {genders.map((item) => {
                                 return (
@@ -259,7 +289,16 @@ const Card = ({ celebsProfiles }) => {
                             borderRadius: "10px",
                           }}
                         >
-                          <p style={{ margin: "auto" }}>Country</p>
+                          <p
+                            style={{
+                              margin: "auto",
+                              marginLeft: "5px",
+                              marginBottom: "5px",
+                              color: "gray",
+                            }}
+                          >
+                            Country
+                          </p>
                           <input
                             className="country_TextField"
                             style={{
@@ -267,6 +306,7 @@ const Card = ({ celebsProfiles }) => {
                               border: borderVal,
                               height: "25px",
                               borderRadius: "10px",
+                              padding: "0 0 0 10px",
                             }}
                             defaultValue={`${item.country}`}
                             disabled={!isEditable}
@@ -289,20 +329,32 @@ const Card = ({ celebsProfiles }) => {
                           marginLeft: "10px",
                         }}
                       >
-                        <p>Description</p>
+                        <p
+                          style={{
+                            margin: "auto",
+                            marginLeft: "5px",
+                            marginBottom: "5px",
+                            color: "gray",
+                          }}
+                        >
+                          Description
+                        </p>
                         <textarea
                           className="description_TextField"
                           defaultValue={`${item.description}`}
                           disabled={!isEditable}
                           style={{
                             border: borderVal,
-                            height: "auto",
+                            height: "70px",
                             overflow: "hidden",
                             resize: "none",
-                            width: "470px",
+                            width: "445px",
                             marginLeft: "auto",
                             marginRight: "25px",
-                            marginTop: "-15px",
+                            borderRadius: "10px",
+                            padding: "7px",
+                            tabindex: "0",
+                            fontFamily: "sans-serif",
                           }}
                           onChange={(event) => {
                             if (event.target.value) {
@@ -320,6 +372,8 @@ const Card = ({ celebsProfiles }) => {
                           display: "flex",
                           justifyContent: "space-evenly",
                           padding: "10px",
+                          margin: "auto",
+                          marginRight: "0px",
                         }}
                       >
                         {isEditable ? (
